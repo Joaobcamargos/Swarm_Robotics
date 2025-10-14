@@ -50,3 +50,28 @@ def point_to_rect_vec(p, rect):
         d = 1e-6
     return v, d, closest
 
+
+def point_to_circle_vec(p, circle_center, circle_radius):
+    """
+    Calcula o vetor e a distância entre um ponto e um círculo.
+
+    Args:
+        p (ndarray): Coordenada do ponto (x, y).
+        circle_center (ndarray): Coordenada do centro do círculo.
+        circle_radius (float): Raio do círculo.
+
+    Returns:
+        tuple:
+            - v (ndarray): Vetor do centro do círculo até o ponto.
+            - d (float): Distância da superfície do círculo até o ponto.
+    """
+    v = p - circle_center
+    d_center = np.linalg.norm(v)
+    
+    # Evita divisão por zero se o ponto estiver no centro
+    if d_center < 1e-9:
+        return np.array([1.0, 0.0]), -circle_radius
+
+    d_surface = d_center - circle_radius
+    return v, d_surface
+

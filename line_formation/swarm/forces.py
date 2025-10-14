@@ -4,7 +4,7 @@ Módulo de cálculo das forças de interação entre robôs e ambiente.
 
 import numpy as np
 from swarm import config
-from swarm.utils import point_to_rect_vec
+from swarm.utils import point_to_rect_vec, point_to_circle_vec
 
 
 def attractive(Q, target):
@@ -43,9 +43,28 @@ def repulsive_from_robots(Q):
     return rep
 
 
+# def repulsive_from_walls(Q, rects):
+#     """
+#     Força repulsiva de paredes/obstáculos.
+
+#     Args:
+#         Q (ndarray): Posições dos robôs (N x 2).
+#         rects (list): Lista de retângulos representando paredes.
+
+#     Returns:
+#         ndarray: Vetores de força repulsiva (N x 2).
+#     """
+#     n = Q.shape[0]
+#     rep = np.zeros((n, 2))
+#     for i in range(n):
+#         for rect in rects:
+#             v, d, _ = point_to_rect_vec(Q[i], rect)
+#             if d < config.DELTA_WALL and d > 1e-9:
+#                 rep[i] += config.K_REP_WALL * (1.0 / d - 1.0 / config.DELTA_WALL) * (v / (d ** 2))
+#     return rep
 def repulsive_from_walls(Q, rects):
     """
-    Força repulsiva de paredes/obstáculos.
+    Força repulsiva de paredes/obstáculos (com bordas arredondadas).
 
     Args:
         Q (ndarray): Posições dos robôs (N x 2).
@@ -56,9 +75,29 @@ def repulsive_from_walls(Q, rects):
     """
     n = Q.shape[0]
     rep = np.zeros((n, 2))
+
+    # Define quais círculos correspondem a quais retângulos
+    wall_circles = {
+        config.WALL_BOTTOM: config.CIRCLE_BOTTOM_CENTER,
+        config.WALL_TOP: config.CIRCLE_TOP_CENTER
+    }
+
     for i in range(n):
         for rect in rects:
-            v, d, _ = point_to_rect_vec(Q[i], rect)
+            # Calcula a distância para a parte retangular da parede
+            v_rect, d_rect, _ = point_to_rect_vec(Q[i], rect)
+
+            # Calcula a distância para a parte circular da parede
+            circle_center = wall_circles[rect]
+            v_circ, d_circ = point_to_circle_vec(Q[i], circle_center, config.CIRCLE_RADIUS)
+
+            # Escolhe a parte do obstáculo (reta ou curva) que está mais perto
+            if d_rect < d_circ:
+                v, d = v_rect, d_rect
+            else:
+                v, d = v_circ, d_circ
+
+            # Calcula a força de repulsão usando a distância e o vetor do ponto mais próximo
             if d < config.DELTA_WALL and d > 1e-9:
                 rep[i] += config.K_REP_WALL * (1.0 / d - 1.0 / config.DELTA_WALL) * (v / (d ** 2))
     return rep

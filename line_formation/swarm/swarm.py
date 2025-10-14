@@ -47,9 +47,9 @@ class Swarm:
         F_att = forces.attractive(Q, config.GOAL)
         F_rep_rob = forces.repulsive_from_robots(Q)
         F_rep_wall = forces.repulsive_from_walls(Q, environment.rects)
-        F_flock = forces.flocking_forces(Q, V)
+        F_flock = forces.flocking_forces(Q, V) # remover para termos só o PF
 
-        F_total = F_att + F_rep_rob + F_rep_wall + F_flock
+        F_total = F_att + F_rep_rob + F_rep_wall  + F_flock
 
         for i, robot in enumerate(self.robots):
             robot.update(F_total[i], config.DT)

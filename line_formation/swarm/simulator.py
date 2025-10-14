@@ -30,7 +30,7 @@ class Simulator:
         self.ax.set_aspect('equal')
         self.ax.set_xlim(0, config.WORLDX)
         self.ax.set_ylim(0, config.WORLDY)
-        self.ax.set_title('Swarm com linhas imaginárias (POO modularizado)')
+        self.ax.set_title('Simulação enxame')
 
         # ambiente
         self.env.draw(self.ax)

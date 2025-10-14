@@ -39,4 +39,8 @@ class Environment:
         # alvo
         ax.plot(config.GOAL[0], config.GOAL[1], marker='*', markersize=15,
                 color='purple', label='Alvo')
-
+        # Círculos para dar o efeito de borda arredondada
+        ax.add_patch(Circle(config.CIRCLE_BOTTOM_CENTER, config.CIRCLE_RADIUS,
+                           color='gray', alpha=0.6))
+        ax.add_patch(Circle(config.CIRCLE_TOP_CENTER, config.CIRCLE_RADIUS,
+                           color='gray', alpha=0.6))
