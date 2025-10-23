@@ -1,8 +1,7 @@
 #!/usr/bin/env python3.6
 # -*- Coding: UTF-8 -*-
 """
-Script principal para executar a simulação de formação em linha
-com robôs em enxame.
+Script principal para executar a simulação do enxame
 """
 
 from swarm.simulator import Simulator
