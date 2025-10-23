@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+# -*- Coding: UTF-8 -*-
 """
 Funções auxiliares de uso geral.
 """
@@ -6,34 +8,12 @@ import numpy as np
 
 
 def clamp(a, lo, hi):
-    """
-    Limita um valor dentro de um intervalo [lo, hi].
-
-    Args:
-        a (float): Valor a ser limitado.
-        lo (float): Valor mínimo permitido.
-        hi (float): Valor máximo permitido.
-
-    Returns:
-        float: Valor limitado.
-    """
+    """Limita um valor dentro de um intervalo [lo, hi]."""
     return max(lo, min(hi, a))
 
 
 def point_to_rect_vec(p, rect):
-    """
-    Calcula o vetor entre um ponto e o retângulo mais próximo.
-
-    Args:
-        p (ndarray): Coordenada do ponto (x, y).
-        rect (tuple): Retângulo definido como (xmin, ymin, xmax, ymax).
-
-    Returns:
-        tuple:
-            - v (ndarray): Vetor do ponto até a borda mais próxima.
-            - d (float): Distância até a borda.
-            - closest (ndarray): Ponto mais próximo dentro do retângulo.
-    """
+    """Calcula o vetor entre um ponto e o retângulo mais próximo."""
     xmin, ymin, xmax, ymax = rect
     cx = clamp(p[0], xmin, xmax)
     cy = clamp(p[1], ymin, ymax)
@@ -52,19 +32,7 @@ def point_to_rect_vec(p, rect):
 
 
 def point_to_circle_vec(p, circle_center, circle_radius):
-    """
-    Calcula o vetor e a distância entre um ponto e um círculo.
-
-    Args:
-        p (ndarray): Coordenada do ponto (x, y).
-        circle_center (ndarray): Coordenada do centro do círculo.
-        circle_radius (float): Raio do círculo.
-
-    Returns:
-        tuple:
-            - v (ndarray): Vetor do centro do círculo até o ponto.
-            - d (float): Distância da superfície do círculo até o ponto.
-    """
+    """Calcula o vetor e a distância entre um ponto e um círculo."""
     v = p - circle_center
     d_center = np.linalg.norm(v)
     
@@ -74,4 +42,3 @@ def point_to_circle_vec(p, circle_center, circle_radius):
 
     d_surface = d_center - circle_radius
     return v, d_surface
-

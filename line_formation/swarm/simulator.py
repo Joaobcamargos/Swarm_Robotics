@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+# -*- Coding: UTF-8 -*-
 """
 Classe Simulator que executa a simulação do enxame.
 """
@@ -9,20 +11,18 @@ from matplotlib.animation import FuncAnimation
 from swarm import config
 from swarm.environment import Environment
 from swarm.swarm import Swarm
+from swarm.states import RobotStatus
 
 
 class Simulator:
     """
     Controlador da simulação de enxame.
+    
+    Recebe como entrada:
+    N (int): Número de robôs no enxame (default=25).
     """
 
-    def __init__(self, N=20):
-        """
-        Inicializa a simulação.
-
-        Args:
-            N (int): Número de robôs no enxame.
-        """
+    def __init__(self, N=25):
         self.env = Environment()
         self.swarm = Swarm(N)
 
@@ -43,27 +43,38 @@ class Simulator:
         for patch in self.robots_patches:
             self.ax.add_patch(patch)
 
-        self.ani = FuncAnimation(self.fig, self.animate, frames=500,
-                                 init_func=self.init_anim, interval=40, blit=True)
+        # FPS 
+        self.ani = FuncAnimation(
+            self.fig,
+            self.animate,
+            frames=500,
+            init_func=self.init_anim,
+            interval=40,
+            blit=True,
+            cache_frame_data=False
+        )
 
     def init_anim(self):
         """Função de inicialização da animação."""
         return self.robots_patches
 
     def animate(self, frame):
-        """
-        Atualiza o estado da simulação a cada frame.
-
-        Args:
-            frame (int): Número do frame.
-        """
+        """Atualiza o estado da simulação a cada frame."""
         self.swarm.step(self.env)
         for patch, robot in zip(self.robots_patches, self.swarm.robots):
             patch.center = robot.pos
+            # cores por estado
+            if robot.state == RobotStatus.LEADER:
+                patch.set_color("red")
+            elif robot.state == RobotStatus.IN_LINE:
+                patch.set_color("green")
+            elif robot.state == RobotStatus.FINISHED:
+                patch.set_color("black")
+            else:
+                patch.set_color(config.COLOR_ROB)
         return self.robots_patches
 
     def run(self):
         """Executa a simulação."""
         plt.legend()
         plt.show()
-
