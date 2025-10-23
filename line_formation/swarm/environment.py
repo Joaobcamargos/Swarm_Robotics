@@ -30,7 +30,7 @@ class Environment:
             ax.add_patch(Rectangle((xmin, ymin), xmax - xmin, ymax - ymin,
                                    color='gray', alpha=0.6))
 
-        # linhas imaginárias (R0 e R1 apenas visuais)
+        # linhas R0 R1
         for i, R in enumerate(config.RADII):
             color = 'orange' if i == 0 else 'green'
             ax.add_patch(Circle(config.FENDA_CENTER, R, fill=False, linestyle='--',
@@ -46,7 +46,7 @@ class Environment:
         ax.add_patch(Circle(config.CIRCLE_TOP_CENTER, config.CIRCLE_RADIUS,
                            color='gray', alpha=0.6))
 
-        # Indicador visual de reset pós-fenda (mini-círculo, apenas visual)
+        # circulo azul , indicar que os robos voltam para o estado group apos passarem a fenda
         reset_center = (config.WALL_XMAX - 0.15, config.GAP_CENTER_Y)
         reset_radius = 0.22
         ax.add_patch(Circle(reset_center, reset_radius, fill=False,
